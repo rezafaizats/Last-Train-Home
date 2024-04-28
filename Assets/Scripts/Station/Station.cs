@@ -13,6 +13,7 @@ namespace RF
         [SerializeField] private string stationId;
         public string StationId => stationId;
         private List<Person> waitingPassengers = new List<Person>();
+        public List<Person> WaitingPassengers => waitingPassengers;
         [SerializeField] private List<Station> connectedStations = new List<Station>();
         public List<Station> ConnectedStations => connectedStations;
 
@@ -57,7 +58,7 @@ namespace RF
                 }
 
                 var passengerDemand = GetPassengerAverageCount(totalPassenger);
-                var passengerOfferings = GetPassengerAverageFare(totalFare, totalPassenger);
+                string passengerOfferings = $"~ {GetPassengerAverageFare(totalFare, totalPassenger)}$";
                 var newStationInfo = new StationInformation(StationController.Instance.AllStation[i].stationId, passengerDemand, passengerOfferings);
                 information.Add(newStationInfo);
             }
@@ -81,8 +82,17 @@ namespace RF
             OnStationCleared?.Invoke(this);
         }
 
-        public string GetPassengerAverageFare(float allPassengerOffer, int passengerCount) {
-            string fareOffer = "~ " + (allPassengerOffer / passengerCount).ToString("F0") + "$";
+        public float GetPassengerAverageFare() {
+            float fareOffer = 0;
+            for (int i = 0; i < waitingPassengers.Count; i++)
+                fareOffer += waitingPassengers[i].FareOffer;
+            
+            fareOffer = fareOffer / waitingPassengers.Count;
+            return fareOffer;
+        }
+
+        public float GetPassengerAverageFare(float allPassengerOffer, int passengerCount) {
+            float fareOffer = (allPassengerOffer / passengerCount);
             return fareOffer;
         }
 

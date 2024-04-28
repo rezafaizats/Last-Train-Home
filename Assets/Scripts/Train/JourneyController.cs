@@ -10,6 +10,7 @@ namespace RF
         [SerializeField] Button addRouteButton;
         [SerializeField] Button removeRouteButton;
         [SerializeField] Button clearRouteButton;
+        [SerializeField] Button setRouteButton;
 
         private Train currentTrain;
 
@@ -25,6 +26,7 @@ namespace RF
             removeRouteButton.onClick.AddListener( () => currentTrain.CurrentRoute.RemoveLastDestination());
             clearRouteButton.onClick.AddListener( () => currentTrain.CurrentRoute.ClearRoute());
             clearRouteButton.onClick.AddListener( () => StationController.Instance.ClearHighlightStationButton(currentTrain.CurrentStation));
+            setRouteButton.onClick.AddListener( () => currentTrain.BoardPassengers());
         }
 
         // Update is called once per frame

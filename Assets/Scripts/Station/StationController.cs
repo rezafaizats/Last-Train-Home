@@ -55,6 +55,10 @@ namespace RF
             OnStationInfoUpdate?.Invoke(information);
         }
 
+        public float GetStationOffer(Station station) {
+            return station.GetPassengerAverageFare();
+        }
+
         public void HighlightStationButton(Station station) {
             
             foreach (var item in stationButton)
