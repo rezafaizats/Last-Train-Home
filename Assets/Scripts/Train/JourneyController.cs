@@ -16,8 +16,11 @@ namespace RF
 
         [SerializeField] Button departButton;
         [SerializeField] TextMeshProUGUI journeyETATextUI;
+        [SerializeField] TextMeshProUGUI currentMoneyTextUI;
 
         private Train currentTrain;
+        private float money = 0;
+
 
         // Start is called before the first frame update
         void Start()
@@ -28,6 +31,7 @@ namespace RF
             StationController.Instance.AllStation[0].HighlightConnectedStation();
             currentTrain.OnTrainJourneyUpdate += UpdateTrainJourneyUI;
             currentTrain.OnTrainJourneyArrived += UpdateTrainJourneyUI;
+            currentTrain.OnTrainDisembarkPassengers += UpdateCurrency;
 
             journeyETATextUI.text = $"Train is on station {currentTrain.CurrentStation.StationId}";
 
@@ -47,6 +51,13 @@ namespace RF
             if(currentTrain.IsTrainDeparted) {
                 currentTrain.UpdateTrainJourney();
             }
+        }
+
+        private void UpdateCurrency(float moneyGained)
+        {
+            money = moneyGained;
+            string currentMoneyText = $"Current money : {money}$";
+            currentMoneyTextUI.text = currentMoneyText;
         }
 
         public void UpdateTrainJourneyUI(Train train) {

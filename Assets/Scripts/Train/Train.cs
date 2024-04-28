@@ -24,6 +24,7 @@ namespace RF
 
         public event Action<Train> OnTrainJourneyUpdate;
         public event Action<Train> OnTrainJourneyArrived;
+        public event Action<float> OnTrainDisembarkPassengers;
 
         public void InitializeTrain(Station startingStation) {
             currentStation = startingStation;
@@ -68,6 +69,25 @@ namespace RF
             }
         }
 
+        public void DisembarkPassengers() {
+            float moneyGained = 0;
+            List<Person> disembarkingPassenger = new List<Person>();
+
+            foreach (var wagon in wagons)
+            {
+                foreach (var passenger in wagon.Passengers)
+                {
+                    if(!passenger.TargetStation == currentRoute.AssignedRoute[0]) continue;
+
+                    moneyGained += passenger.FareOffer;
+                    disembarkingPassenger.Add(passenger);
+                }
+                wagon.DisembarkPassengers(disembarkingPassenger);
+                disembarkingPassenger.Clear();
+            }
+            OnTrainDisembarkPassengers?.Invoke(moneyGained);
+        }
+
         public void DepartTrain() {
             if(currentRoute.AssignedRoute.Count <= 0) {
                 Debug.LogWarning("Currently there are no assigned route");
@@ -75,16 +95,21 @@ namespace RF
             }
 
             isTrainDeparted = true;
+            isTrainArrivedAtNextStation = false;
         }
 
         public void UpdateTrainJourney() {
             float distanceToNextStation = Vector2.Distance(currentStation.WorldPosition, currentRoute.AssignedRoute[0].WorldPosition);
-            Debug.Log($"Train distance to next station is {distanceToNextStation}. Current distance : {currentDistanceToNextStation}");
             if(distanceToNextStation <= currentDistanceToNextStation || isTrainArrivedAtNextStation) {
                 Debug.Log($"Train is arrived on station {currentRoute.AssignedRoute[0].StationId}");
+                //Disembark Pasengers
+                DisembarkPassengers();
+
+                //Reset parameter
                 isTrainDeparted = false;
                 isTrainArrivedAtNextStation = true;
                 currentStation = currentRoute.AssignedRoute[0];
+                currentDistanceToNextStation = 0f;
                 OnTrainJourneyArrived?.Invoke(this);
                 return;
             }

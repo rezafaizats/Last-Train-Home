@@ -7,6 +7,7 @@ namespace RF
     public class Wagon
     {
         private List<Person> passengers = new List<Person>();
+        public List<Person> Passengers => passengers;
         private int capacity;
         public int Capacity => capacity;
 
@@ -26,6 +27,15 @@ namespace RF
 
         public bool IsPassengerOnboard(Person person) {
             return passengers.Contains(person);
+        }
+
+        public void DisembarkPassengers(List<Person> disembarkingPassengers) {
+            foreach (var disembarkingPassenger in disembarkingPassengers)
+            {
+                if(!passengers.Contains(disembarkingPassenger)) continue;
+
+                passengers.Remove(disembarkingPassenger);
+            }
         }
 
         public bool IsFullCapacity() {
