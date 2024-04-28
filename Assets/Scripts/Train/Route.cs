@@ -12,8 +12,9 @@ namespace RF {
         
         public event Action<Route> OnDestinationUpdated;
 
-        public void InitializeRoute(Station startingStation) {
+        public void InitializeRoute(Station startingStation, Train currenTrain) {
             startingDestination = startingStation;
+            currenTrain.OnTrainJourneyArrived += UpdateRoute;
         }
 
         public void AddDestination(Station nextStation) {
@@ -38,6 +39,14 @@ namespace RF {
             station.ClearStation();
             destinations.RemoveAt(destinations.Count - 1);
             OnDestinationUpdated?.Invoke(this);
+        }
+
+        public void UpdateRoute(Train train) {
+            if(destinations.Count == 1)
+                destinations.Clear();
+            else
+                destinations.RemoveAt(0);
+            startingDestination = train.CurrentStation;
         }
 
         public void ClearRoute() {

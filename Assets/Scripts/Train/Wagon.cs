@@ -14,9 +14,7 @@ namespace RF
             this.capacity = capacity;
             passengers.Clear();
 
-            passengers = new List<Person>(capacity);
-            for (int i = 0; i < capacity; i++)
-                passengers.Add(null);
+            passengers = new List<Person>();
         }
 
         public void BoardPassenger(Person onboardingPassenger) {

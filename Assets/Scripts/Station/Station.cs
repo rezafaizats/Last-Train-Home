@@ -10,6 +10,7 @@ namespace RF
     public class Station : MonoBehaviour
     {
         [SerializeField] private Vector2 worldPosition;
+        public Vector2 WorldPosition => worldPosition;
         [SerializeField] private string stationId;
         public string StationId => stationId;
         private List<Person> waitingPassengers = new List<Person>();
